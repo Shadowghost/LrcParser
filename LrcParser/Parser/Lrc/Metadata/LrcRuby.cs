@@ -28,7 +28,7 @@ public class LrcRuby
     /// <summary>
     /// Time tags
     /// </summary>
-    public SortedDictionary<TextIndex, int> TimeTags { get; set; } = new();
+    public List<TextIndex> TimeTags { get; set; } = new();
 
     /// <summary>
     /// Start position

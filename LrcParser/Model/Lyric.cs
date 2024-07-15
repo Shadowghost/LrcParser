@@ -13,7 +13,7 @@ public class Lyric
     /// <summary>
     /// Time tags
     /// </summary>
-    public SortedDictionary<TextIndex, int?> TimeTags { get; set; } = new();
+    public List<TextIndex> TimeTags { get; set; } = new();
 
     /// <summary>
     /// Ruby tags

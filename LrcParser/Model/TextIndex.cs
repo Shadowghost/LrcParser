@@ -7,16 +7,25 @@ public readonly struct TextIndex : IComparable<TextIndex>, IEquatable<TextIndex>
 {
     public int Index { get; }
 
+    public int? Time { get; }
+
     public IndexState State { get; }
 
-    public TextIndex(int index = 0, IndexState state = IndexState.Start)
+    public TextIndex(int index = 0, int? time = null, IndexState state = IndexState.Start)
     {
         Index = index;
+        Time = time;
         State = state;
     }
 
     public int CompareTo(TextIndex other)
     {
+        if (Time < other.Time)
+            return -1;
+
+        if (Time < other.Time)
+            return -1;
+
         if (Index > other.Index)
             return 1;
 
@@ -34,7 +43,7 @@ public readonly struct TextIndex : IComparable<TextIndex>, IEquatable<TextIndex>
 
     public bool Equals(TextIndex other)
     {
-        return Index == other.Index && State == other.State;
+        return Index == other.Index && Time == other.Time && State == other.State;
     }
 
     public override bool Equals(object? obj)
@@ -48,7 +57,7 @@ public readonly struct TextIndex : IComparable<TextIndex>, IEquatable<TextIndex>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Index, State);
+        return HashCode.Combine(Index, Time, State);
     }
 
     public static bool operator ==(TextIndex index1, TextIndex index2) => index1.Equals(index2);
@@ -65,7 +74,7 @@ public readonly struct TextIndex : IComparable<TextIndex>, IEquatable<TextIndex>
 
     public override string ToString()
     {
-        return $"Index:{Index}, Start:{State}";
+        return $"Index:{Index}, Time:{Time}, Start:{State}";
     }
 }
 

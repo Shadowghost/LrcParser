@@ -7,11 +7,14 @@ using LrcParser.Model;
 
 namespace LrcParser.Tests.Helper;
 
-public static class TestCaseTextIndexHelper
+public static partial class TestCaseTextIndexHelper
 {
+    [GeneratedRegex("(?<index>[-0-9]+),(?<state>start|end)")]
+    private static partial Regex TextIndexRegex();
+
     public static TextIndex ParseTextIndex(string str)
     {
-        var regex = new Regex("(?<index>[-0-9]+),(?<state>start|end)");
+        var regex = TextIndexRegex();
         var result = regex.Match(str);
         if (!result.Success)
             throw new RegexMatchTimeoutException(nameof(str));
@@ -19,6 +22,6 @@ public static class TestCaseTextIndexHelper
         int index = result.GetGroupValue<int>("index");
         var state = result.GetGroupValue<string>("state") == "start" ? IndexState.Start : IndexState.End;
 
-        return new TextIndex(index, state);
+        return new TextIndex(index, null, state);
     }
 }

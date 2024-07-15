@@ -22,9 +22,9 @@ public class LrcLyricParserTest : BaseSingleLineParserTest<LrcLyricParser, LrcLy
         Assert.That(actual, Is.EqualTo(expected));
     }
 
-    [TestCase("[00:17:97]帰[00:18:37]り[00:18:55]道[00:18:94]は[00:19:22]", "帰り道は", new[] { "[0,start]:17970", "[1,start]:18370", "[2,start]:18550", "[3,start]:18940", "[3,end]:19220" })]
-    [TestCase("帰[00:18:37]り[00:18:55]道[00:18:94]は[00:19:22]", "帰り道は", new[] { "[1,start]:18370", "[2,start]:18550", "[3,start]:18940", "[3,end]:19220" })]
-    [TestCase("[00:17:97]帰[00:18:37]り[00:18:55]道[00:18:94]は", "帰り道は", new[] { "[0,start]:17970", "[1,start]:18370", "[2,start]:18550", "[3,start]:18940" })]
+    [TestCase("[00:17:97]帰[00:18:37]り[00:18:55]道[00:18:94]は[00:19:22]", "帰り道は", new[] { "[0,17970,start]", "[1,18370,start]", "[2,18550,start]", "[3,18940,start]", "[3,19220,end]" })]
+    [TestCase("帰[00:18:37]り[00:18:55]道[00:18:94]は[00:19:22]", "帰り道は", new[] { "[1,18370,start]", "[2,18550,start]", "[3,18940,start]", "[3,19220,end]" })]
+    [TestCase("[00:17:97]帰[00:18:37]り[00:18:55]道[00:18:94]は", "帰り道は", new[] { "[0,17970,start]", "[1,18370,start]", "[2,18550,start]", "[3,18940,start]" })]
     [TestCase("帰り道は", "帰り道は", new string[] { })]
     [TestCase("", "", new string[] { })]
     [TestCase(null, "", new string[] { })]
@@ -41,9 +41,9 @@ public class LrcLyricParserTest : BaseSingleLineParserTest<LrcLyricParser, LrcLy
         Assert.That(actual.TimeTags, Is.EqualTo(expected.TimeTags));
     }
 
-    [TestCase("帰り道は", new[] { "[0,start]:17970", "[1,start]:18370", "[2,start]:18550", "[3,start]:18940", "[3,end]:19220" }, "[00:17.97]帰[00:18.37]り[00:18.55]道[00:18.94]は[00:19.22]")]
-    [TestCase("帰り道は", new[] { "[1,start]:18370", "[2,start]:18550", "[3,start]:18940", "[3,end]:19220" }, "帰[00:18.37]り[00:18.55]道[00:18.94]は[00:19.22]")]
-    [TestCase("帰り道は", new[] { "[0,start]:17970", "[1,start]:18370", "[2,start]:18550", "[3,start]:18940" }, "[00:17.97]帰[00:18.37]り[00:18.55]道[00:18.94]は")]
+    [TestCase("帰り道は", new[] { "[0,17970,start]", "[1,18370,start]", "[2,18550,start]", "[3,18940,start]", "[3,19220,end]" }, "[00:17.97]帰[00:18.37]り[00:18.55]道[00:18.94]は[00:19.22]")]
+    [TestCase("帰り道は", new[] { "[1,18370.start]", "[2,18550,start]", "[3,18940,start]", "[3,19220,end]" }, "帰[00:18.37]り[00:18.55]道[00:18.94]は[00:19.22]")]
+    [TestCase("帰り道は", new[] { "[0,17970,start]", "[1,18370,start]", "[2,18550,start]", "[3,18940,start]" }, "[00:17.97]帰[00:18.37]り[00:18.55]道[00:18.94]は")]
     [TestCase("帰り道は", new string[] { }, "帰り道は")]
     [TestCase("", new string[] { }, "")]
     public void TestEncode(string text, string[] timeTags, string expected)

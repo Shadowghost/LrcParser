@@ -9,17 +9,19 @@ namespace LrcParser.Tests.Parser.Lrc.Utils;
 public class TimeTagUtilsTest
 {
     [TestCase("[00:01:00]", 1000)]
-    public void TestTimeTagToMillionSecond(string timeTag, int millionSecond)
+    [TestCase("[00:01.50]", 1500)]
+    public void TestTimeTagToMillisecond(string timeTag, int milliseconds)
     {
-        var actual = TimeTagUtils.TimeTagToMillionSecond(timeTag);
+        var actual = TimeTagUtils.TimeTagToMillisecond(timeTag);
 
-        Assert.That(actual, Is.EqualTo(millionSecond));
+        Assert.That(actual, Is.EqualTo(milliseconds));
     }
 
     [TestCase(1000, "[00:01.00]")]
-    public void TestTimeTagToMillionSecond(int millionSecond, string timeTag)
+    [TestCase(1500, "[00:01.50]")]
+    public void TestTimeTagToMillisecond(int milliseconds, string timeTag)
     {
-        var actual = TimeTagUtils.MillionSecondToTimeTag(millionSecond);
+        var actual = TimeTagUtils.MillisecondToTimeTag(milliseconds);
 
         Assert.That(actual, Is.EqualTo(timeTag));
     }

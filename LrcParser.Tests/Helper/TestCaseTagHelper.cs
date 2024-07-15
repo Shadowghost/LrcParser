@@ -1,7 +1,6 @@
 // Copyright (c) karaoke.dev <contact@karaoke.dev>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -10,51 +9,41 @@ using LrcParser.Model;
 
 namespace LrcParser.Tests.Helper;
 
-public static class TestCaseTagHelper
+public static partial class TestCaseTagHelper
 {
+    [GeneratedRegex("(?<index>[-0-9]+),(?<time>[-0-9]+|s*|),(?<state>start|end)]")]
+    private static partial Regex TimeTagRegex();
+
     /// <summary>
-    /// Process test case time tag string format into <see cref="Tuple"/>
+    /// Process test case time tag string format into <see cref="TextIndex"/>
     /// </summary>
     /// <example>
-    /// [0,start]:1000
+    /// [0,1000,start]
     /// </example>
     /// <param name="str">Time tag string format</param>
-    /// <returns><see cref="Tuple"/>Time tag object</returns>
-    public static Tuple<TextIndex, int?> ParseTimeTag(string str)
+    /// <returns><see cref="TextIndex"/>Time tag object</returns>
+    public static TextIndex? ParseTimeTag(string str)
     {
         if (string.IsNullOrEmpty(str))
-            return new Tuple<TextIndex, int?>(new TextIndex(0), null);
+            return null;
 
-        var regex = new Regex("(?<index>[-0-9]+),(?<state>start|end)]:(?<time>[-0-9]+|s*|)");
+        var regex = TimeTagRegex();
         var result = regex.Match(str);
         if (!result.Success)
             throw new RegexMatchTimeoutException(nameof(str));
 
         int index = result.GetGroupValue<int>("index");
         var state = result.GetGroupValue<string>("state") == "start" ? IndexState.Start : IndexState.End;
-        int? time = result.GetGroupValue<int?>("time");
+        int time = result.GetGroupValue<int?>("time") ?? 0;
 
-        return new Tuple<TextIndex, int?>(new TextIndex(index, state), time);
+        return new TextIndex(index, time, state);
     }
 
-    public static SortedDictionary<TextIndex, int?> ParseTimeTagsWithNullableTime(IEnumerable<string> strings)
+    public static List<TextIndex> ParseTimeTags(IEnumerable<string> strings)
     {
-        var dictionary = strings.Select(ParseTimeTag).ToDictionary(k => k.Item1, v => v.Item2);
+        var list = strings.Select(ParseTimeTag).ToList();
+        list.Sort();
 
-        return new SortedDictionary<TextIndex, int?>(dictionary);
-    }
-
-    public static SortedDictionary<TextIndex, int> ParseTimeTags(IEnumerable<string> strings)
-    {
-        var dictionary = ParseTimeTagsWithNullableTime(strings)
-            .ToDictionary(k => k.Key, v =>
-            {
-                if (v.Value == null)
-                    throw new ArgumentNullException(nameof(v.Value));
-
-                return v.Value.Value;
-            });
-
-        return new SortedDictionary<TextIndex, int>(dictionary);
+        return list.Where(u => u.HasValue).Select(u => u.Value).ToList();
     }
 }

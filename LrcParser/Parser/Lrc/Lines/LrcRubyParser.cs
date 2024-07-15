@@ -23,8 +23,8 @@ public class LrcRubyParser : SingleLineParser<LrcRuby>
 
         var parent = rubyTextResult.GetGroupValue<string>("text")!;
         var (ruby, timeTags) = LrcTimedTextUtils.TimedTextToObject(rubyTagResult[1]);
-        var startTime = string.IsNullOrEmpty(rubyTagResult.ElementAtOrDefault(2)) ? default(int?) : TimeTagUtils.TimeTagToMillionSecond(rubyTagResult[2]);
-        var endTime = string.IsNullOrEmpty(rubyTagResult.ElementAtOrDefault(3)) ? default(int?) : TimeTagUtils.TimeTagToMillionSecond(rubyTagResult[3]);
+        var startTime = string.IsNullOrEmpty(rubyTagResult.ElementAtOrDefault(2)) ? default(int?) : TimeTagUtils.TimeTagToMillisecond(rubyTagResult[2]);
+        var endTime = string.IsNullOrEmpty(rubyTagResult.ElementAtOrDefault(3)) ? default(int?) : TimeTagUtils.TimeTagToMillisecond(rubyTagResult[3]);
 
         return new LrcRuby
         {
@@ -40,8 +40,8 @@ public class LrcRubyParser : SingleLineParser<LrcRuby>
     {
         var parent = component.Parent;
         var ruby = LrcTimedTextUtils.ToTimedText(component.Ruby, component.TimeTags);
-        var startTime = component.StartTime == null ? "" : TimeTagUtils.MillionSecondToTimeTag(component.StartTime.Value);
-        var endTime = component.EndTime == null ? "" : TimeTagUtils.MillionSecondToTimeTag(component.EndTime.Value);
+        var startTime = component.StartTime == null ? "" : TimeTagUtils.MillisecondToTimeTag(component.StartTime.Value);
+        var endTime = component.EndTime == null ? "" : TimeTagUtils.MillisecondToTimeTag(component.EndTime.Value);
 
         var input = $"@Ruby{index + 1}={parent},{ruby},{startTime},{endTime}";
 
